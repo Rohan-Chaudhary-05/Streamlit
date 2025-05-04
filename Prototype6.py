@@ -33,19 +33,25 @@ page = st.sidebar.selectbox("Choose a page:", ["Discharge Activity Overview", "R
 if page == "Discharge Activity Overview":
     st.header("Discharge Activity Overview")
 
-    # Interactive Filter: FeatureType
-    feature_filter = st.multiselect("Select Discharge Activity Type(s):", df['FeatureType'].unique(), default=df['FeatureType'].unique())
-    filtered_df = df[df['FeatureType'].isin(feature_filter)]
+    # ConsentStatus filter
+    status_option = st.radio("Filter by Consent Status:", ["All", "Issued - Active", "Issued - Inactive"])
+    if status_option != "All":
+        filtered_df = df[df['ConsentStatus'] == status_option]
+    else:
+        filtered_df = df.copy()
+
+    # Top N FeatureType slider
+    top_n = st.slider("Number of Top Activity Types to Display:", min_value=3, max_value=20, value=10)
 
     # Chart 1: Top Activity Types
-    st.subheader("Top 10 Selected Activity Types")
-    top_activity_counts = filtered_df['FeatureType'].value_counts().nlargest(10).reset_index()
+    st.subheader(f"Top {top_n} Discharge Activity Types")
+    top_activity_counts = filtered_df['FeatureType'].value_counts().nlargest(top_n).reset_index()
     top_activity_counts.columns = ['Activity Type', 'Count']
-    fig1 = px.bar(top_activity_counts, x='Activity Type', y='Count', title="Top Activity Types")
+    fig1 = px.bar(top_activity_counts, x='Activity Type', y='Count', title=f"Top {top_n} Activity Types")
     st.plotly_chart(fig1, use_container_width=True)
 
     # Chart 2: Consent Status by Activity
-    st.subheader("Consent Status Breakdown")
+    st.subheader("Consent Status Breakdown for Top Activities")
     top5 = filtered_df['FeatureType'].value_counts().nlargest(5).index
     status_data = filtered_df[filtered_df['FeatureType'].isin(top5)]
     grouped = status_data.groupby(['FeatureType', 'ConsentStatus']).size().reset_index(name='Count')
@@ -58,13 +64,6 @@ if page == "Discharge Activity Overview":
     rma_counts.columns = ['RMA Section', 'Count']
     fig3 = px.bar(rma_counts, x='RMA Section', y='Count', title="Legal Basis Frequency")
     st.plotly_chart(fig3, use_container_width=True)
-
-    # Custom Visualisation Tool
-    st.subheader("Custom Categorical Breakdown")
-    categorical_cols = df.select_dtypes(include='object').columns.tolist()
-    x_col = st.selectbox("Select X-axis category:", categorical_cols)
-    fig_custom = px.histogram(filtered_df, x=x_col, title=f"Distribution by {x_col}")
-    st.plotly_chart(fig_custom, use_container_width=True)
 
 # ========== PAGE 2 ==========
 elif page == "Regional & Geographic Overview":
