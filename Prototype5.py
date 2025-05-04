@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 from pyproj import Transformer
 
-# Set Streamlit layout (must be first Streamlit call)
+# Set Streamlit layout (must be first Streamlit command)
 st.set_page_config(layout="wide")
 st.title("Air Discharge Consents Dashboard")
 
@@ -15,21 +15,12 @@ except FileNotFoundError:
     st.error(f"File not found at path: {csv_path}")
     st.stop()
 
-# Optional: Show available columns for debug
-st.sidebar.write("Columns in dataset:", df.columns.tolist())
-
 # Clean and preprocess dates
 if 'fmDate' in df.columns:
     df['fmDate'] = pd.to_datetime(df['fmDate'], errors='coerce')
     df['StartYear'] = df['fmDate'].dt.year
 else:
     st.warning("Missing 'fmDate' column. StartYear-based visualisations may not work.")
-
-if 'Expires' in df.columns:
-    df['Expires'] = pd.to_datetime(df['Expires'], errors='coerce')
-    df['ExpiryYear'] = df['Expires'].dt.year
-else:
-    st.warning("The column 'Expires' is missing. Expiry-based analysis will be skipped.")
 
 # Coordinate transformation: NZTM to WGS84 (lon/lat)
 if {'X', 'Y'}.issubset(df.columns):
@@ -41,7 +32,7 @@ else:
 # Sidebar for navigation
 page = st.sidebar.selectbox("Choose a page:", ["Discharge Activity Overview", "Regional & Geographic Overview"])
 
-# Page 1
+# Page 1: Discharge Activity Overview
 if page == "Discharge Activity Overview":
     st.header("Discharge Activity Overview")
 
@@ -65,7 +56,7 @@ if page == "Discharge Activity Overview":
     fig3 = px.bar(rma_counts, x='RMA Section', y='Count', title="Frequency by RMA Section")
     st.plotly_chart(fig3, use_container_width=True)
 
-# Page 2
+# Page 2: Regional & Geographic Overview
 elif page == "Regional & Geographic Overview":
     st.header("Regional & Geographic Overview")
 
