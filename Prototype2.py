@@ -53,52 +53,7 @@ fig4 = px.histogram(
 )
 st.plotly_chart(fig4, use_container_width=True)
 
-# Section 6: Show raw data
-st.subheader("Raw Data Preview")
-st.dataframe(df.head())
-st.download_button(
-    label="Download Raw Data",
-    data=df.to_csv(index=False),
-    file_name='Cleaned_Data.csv',
-    mime='text/csv'
-)
-
-# Section 7: Filtered Data
-st.subheader("Filtered Data")
-activity_type = st.selectbox("Select Activity Type", df['FeatureType'].unique())
-filtered_data = df[df['FeatureType'] == activity_type]
-st.dataframe(filtered_data)
-st.download_button(
-    label="Download Filtered Data",
-    data=filtered_data.to_csv(index=False),
-    file_name=f'Filtered_Data_{activity_type}.csv',
-    mime='text/csv'
-)
-
-# Section 8: User Input for Custom Analysis
-st.subheader("Custom Analysis")
-custom_activity = st.selectbox("Select Custom Activity Type", df['FeatureType'].unique(), key="custom_select")
-custom_filtered_data = df[df['FeatureType'] == custom_activity]
-st.dataframe(custom_filtered_data)
-st.download_button(
-    label="Download Custom Filtered Data",
-    data=custom_filtered_data.to_csv(index=False),
-    file_name=f'Custom_Filtered_Data_{custom_activity}.csv',
-    mime='text/csv'
-)
-
-# Section 9: Feedback
-st.subheader("Feedback")
-feedback = st.text_area("Please provide your feedback or suggestions:")
-if st.button("Submit Feedback"):
-    st.success("Thank you for your feedback!")
-    # Optionally save feedback
 
 # Section 10: Conclusion
 st.subheader("Conclusion")
 st.write("This dashboard provides insights into air discharge consents, including summary metrics, visualisations, and options for data download. For any questions or further analysis, please contact us.")
-
-# Section 11: Contact Information
-st.subheader("Contact Information")
-st.write("For any inquiries or support, please reach out to us at:")
-st.write("Email: support@example.com")
