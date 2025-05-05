@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 st.title("🇳🇿 Air Discharge Consents Dashboard (New Zealand)")
 
 # --- LOAD DATA ---
-csv_path = "/Users/unofficial_storm/Desktop/Cleaned_Data.csv"  
+csv_path = "Cleaned_Data.csv"  
 df = pd.read_csv(csv_path)
 
 # --- CLEAN COLUMN NAMES ---
