@@ -53,7 +53,6 @@ fig4 = px.histogram(
 )
 st.plotly_chart(fig4, use_container_width=True)
 
-
-# Section 10: Conclusion
+# Section 6: Conclusion
 st.subheader("Conclusion")
 st.write("This dashboard provides insights into air discharge consents, including summary metrics, visualisations, and options for data download. For any questions or further analysis, please contact us.")
