@@ -83,7 +83,18 @@ st.plotly_chart(fig3, use_container_width=True)
 
 # --- MAP VISUALISATION ---
 st.subheader("🗺️ Consent Locations Map")
-filtered_map_df = filtered_df.dropna(subset=['Latitude', 'Longitude'])
+
+# Feature type filter (only for the map)
+map_feature_options = sorted(df['FeatureType'].dropna().unique())
+selected_map_features = st.multiselect(
+    "Filter map by Feature Type:",
+    options=map_feature_options,
+    default=map_feature_options
+)
+
+filtered_map_df = filtered_df[
+    filtered_df['FeatureType'].isin(selected_map_features)
+].dropna(subset=['Latitude', 'Longitude'])
 
 if not filtered_map_df.empty:
     fig_map = px.scatter_mapbox(
@@ -100,3 +111,6 @@ if not filtered_map_df.empty:
     st.plotly_chart(fig_map, use_container_width=True)
 else:
     st.info("No map data to display for the selected filters.")
+
+
+
