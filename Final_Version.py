@@ -8,7 +8,7 @@ st.set_page_config(layout="wide")
 st.title("🇳🇿 Air Discharge Consents Dashboard (New Zealand)")
 
 # --- LOAD DATA ---
-csv_path = "Cleaned_Data.csv"  
+csv_path = "/Users/unofficial_storm/Desktop/Cleaned_Data.csv"  
 df = pd.read_csv(csv_path)
 
 # --- CLEAN COLUMN NAMES ---
@@ -84,21 +84,22 @@ st.plotly_chart(fig3, use_container_width=True)
 # --- MAP VISUALISATION ---
 st.subheader("🗺️ Consent Locations Map")
 
-# Feature type filter (only for the map)
-map_feature_options = sorted(df['FeatureType'].dropna().unique())
-selected_map_features = st.multiselect(
-    "Filter map by Feature Type:",
-    options=map_feature_options,
-    default=map_feature_options
+# Only use filtered_df rows with coordinates
+map_df = filtered_df.dropna(subset=['Latitude', 'Longitude'])
+
+# FeatureType multiselect for map filtering
+feature_options = sorted(map_df['FeatureType'].dropna().unique())
+selected_features = st.multiselect(
+    "Select Feature Types to Display on Map:",
+    options=feature_options,
+    default=feature_options
 )
 
-filtered_map_df = filtered_df[
-    filtered_df['FeatureType'].isin(selected_map_features)
-].dropna(subset=['Latitude', 'Longitude'])
+map_filtered_df = map_df[map_df['FeatureType'].isin(selected_features)]
 
-if not filtered_map_df.empty:
+if not map_filtered_df.empty:
     fig_map = px.scatter_mapbox(
-        filtered_map_df,
+        map_filtered_df,
         lat='Latitude',
         lon='Longitude',
         color='FeatureType',
@@ -111,6 +112,3 @@ if not filtered_map_df.empty:
     st.plotly_chart(fig_map, use_container_width=True)
 else:
     st.info("No map data to display for the selected filters.")
-
-
-
