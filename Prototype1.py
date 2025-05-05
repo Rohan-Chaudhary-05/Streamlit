@@ -54,18 +54,7 @@ fig4 = px.histogram(
 )
 st.plotly_chart(fig4, use_container_width=True)
 
-# Section 6: Show raw data
-st.subheader("Raw Data Preview")
-st.dataframe(df.head())
-st.download_button(
-    label="Download Raw Data",
-    data=df.to_csv(index=False),
-    file_name='Cleaned_Data.csv',
-    mime='text/csv'
-)
-
-
-# Section 10: Conclusion
+# Section 6: Conclusion
 st.subheader("Conclusion")
 st.write("This dashboard provides insights into air discharge consents, including summary metrics, visualisations, and options for data download. For any questions or further analysis, please contact us.")
 
