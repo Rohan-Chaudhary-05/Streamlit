@@ -82,7 +82,7 @@ elif page == "Geographic Distribution":
     else:
         st.warning("Map data unavailable. Latitude/Longitude conversion may have failed.")
 
-    # Optional: Runanga distribution
+    # Runanga distribution
     st.subheader("Distribution by Runanga")
     runanga_counts = df['GIS_Runanga'].value_counts().nlargest(10).reset_index()
     runanga_counts.columns = ['Runanga', 'Count']
@@ -108,7 +108,7 @@ elif page == "Time-Based Analysis":
     fig_expire = px.bar(expiry_counts, x='Year', y='Count', title='Consents Expiring Each Year')
     st.plotly_chart(fig_expire, use_container_width=True)
 
-    # Optional: Table of soon-expiring consents
+    # Table of soon-expiring consents
     st.subheader("Upcoming Expiries (Next 5 Years)")
     upcoming = df[(df['ExpiryYear'] >= pd.Timestamp.now().year) & 
                   (df['ExpiryYear'] <= pd.Timestamp.now().year + 5)]
